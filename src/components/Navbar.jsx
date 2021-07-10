@@ -1,5 +1,7 @@
+import s from './Navbar.module.css'
+
 const Navbar = () =>
-    <nav className='nav'>
+    <nav className={s.nav}>
         <div><a>Profile</a></div>
         <div><a>Messages</a></div>
         <div><a>News</a></div>
