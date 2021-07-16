@@ -1,16 +1,27 @@
 import Post from "./Post/Post";
+import s from './MyPosts.module.css'
 
-const MyPosts = () =>
-    <div>
-        My posts
+const MyPosts = () => {
+    const posts = [
+        {id: 1, message: 'Hello!', likesCount: 24},
+        {id: 2, message: 'How are you?', likesCount: 10},
+    ]
+    const postsElements = posts
+        .map(post => <Post message={post.message} likeCount={post.likesCount}/>)
+    return <div className={s.postBlock}>
+        <h3>My posts</h3>
         <div>
-            <textarea/>
-            <button>Add post</button>
+            <div>
+                <textarea/>
+            </div>
+            <div>
+                <button>Add post</button>
+            </div>
         </div>
-        <div>
-            <Post message='Hello!' likeCount='24'/>
-            <Post message='How are you?' likeCount='10'/>
+        <div className={s.posts}>
+            {postsElements}
         </div>
-    </div>
+    </div>;
+}
 
 export default MyPosts
