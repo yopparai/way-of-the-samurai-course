@@ -5,7 +5,7 @@ import ProfileInfo from "./ProfileInfo/ProfileInfo";
 const Profile = (props) =>
     <div className={s.content}>
         <ProfileInfo/>
-        <MyPosts posts={props.posts}/>
+        <MyPosts posts={props.state.posts}/>
     </div>
 
 export default Profile
