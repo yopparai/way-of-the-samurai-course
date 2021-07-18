@@ -5,7 +5,8 @@ const state = {
         posts: [
             {id: 1, message: 'Hello!', likesCount: 24},
             {id: 2, message: 'How are you?', likesCount: 10},
-        ]
+        ],
+        newPostText: ''
     },
     dialogsPage: {
         dialogs: [
@@ -30,14 +31,21 @@ const state = {
         ]
     }
 }
+window.state = state
 
-export const addPost = (postMessage) => {
+export const addPost = () => {
     const newPost = {
         id: 3,
-        message: postMessage,
+        message: state.profilePage.newPostText,
         likesCount: 0
     }
     state.profilePage.posts.push(newPost)
+    state.profilePage.newPostText = ''
+    renderEntireTree(state)
+}
+
+export const updateNewPostText = (newPostText) => {
+    state.profilePage.newPostText = newPostText
     renderEntireTree(state)
 }
 
