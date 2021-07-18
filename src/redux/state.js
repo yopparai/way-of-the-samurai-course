@@ -22,6 +22,7 @@ const state = {
             {id: 2, message: 'How are you'},
             {id: 3, message: 'Yo'}
         ],
+        newMessageText: ''
     },
     navbar: {
         friends: [
@@ -31,7 +32,6 @@ const state = {
         ]
     }
 }
-window.state = state
 
 export const addPost = () => {
     const newPost = {
@@ -46,6 +46,21 @@ export const addPost = () => {
 
 export const updateNewPostText = (newPostText) => {
     state.profilePage.newPostText = newPostText
+    renderEntireTree(state)
+}
+
+export const addMessage = () => {
+    const newMessage = {
+        id: 4,
+        message: state.dialogsPage.newMessageText
+    }
+    state.dialogsPage.messages.push(newMessage)
+    state.dialogsPage.newMessageText = ''
+    renderEntireTree(state)
+}
+
+export const updateNewMessageText = (newMessageText) => {
+    state.dialogsPage.newMessageText = newMessageText
     renderEntireTree(state)
 }
 
