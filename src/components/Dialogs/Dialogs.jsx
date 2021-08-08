@@ -4,9 +4,9 @@ import Message from "./Message/Message";
 import React from "react";
 
 const Dialogs = (props) => {
-    const dialogsElements = props.dialogs
+    const dialogsElements = props.dialogsPage.dialogs
         .map(dialog => <DialogItem id={dialog.id} name={dialog.name}/>)
-    const messagesElements = props.messages
+    const messagesElements = props.dialogsPage.messages
         .map(message => <Message message={message.message}/>)
     const newMessageElement = React.createRef()
     const onAddMessage = () => {
@@ -25,7 +25,7 @@ const Dialogs = (props) => {
             <div>
                 <textarea
                     ref={newMessageElement}
-                    value={props.newMessageText}
+                    value={props.dialogsPage.newMessageText}
                     onChange={onMessageChange}
                 />
             </div>
