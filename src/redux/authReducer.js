@@ -24,7 +24,7 @@ export const setAuthUserData = (userId, email, login, isAuth) => ({
     data: {userId, email, login, isAuth}
 })
 
-export const authorize = () => (dispatch) => {
+export const authorize = () => (dispatch) =>
     authAPI.authorize()
         .then(data => {
             if (data.resultCode === 0) {
@@ -32,7 +32,6 @@ export const authorize = () => (dispatch) => {
                 dispatch(setAuthUserData(id, email, login, true))
             }
         })
-}
 
 export const login = (email, password, rememberMe) => (dispatch) => {
     authAPI.login(email, password, rememberMe)
