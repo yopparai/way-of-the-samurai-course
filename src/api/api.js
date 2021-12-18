@@ -9,49 +9,49 @@ const instance = axios.create({
 })
 
 export const usersAPI = {
-    getUsers(currentPage, pageSize) {
-        return instance.get(`/users?page=${currentPage}&count=${pageSize}`)
-            .then(response => response.data)
+    async getUsers(currentPage, pageSize) {
+        const response = await instance.get(`/users?page=${currentPage}&count=${pageSize}`);
+        return response.data;
     }
 }
 
 export const authAPI = {
-    authorize() {
-        return instance.get('/auth/me')
-            .then(response => response.data)
+    async authorize() {
+        const response = await instance.get('/auth/me')
+        return response.data
     },
-    login(email, password, rememberMe) {
-        return instance.post('/auth/login', {email, password, rememberMe})
-            .then(response => response.data)
+    async login(email, password, rememberMe) {
+        const response = await instance.post('/auth/login', {email, password, rememberMe})
+        return response.data
     },
-    logout() {
-        return instance.delete('/auth/login')
-            .then(response => response.data)
+    async logout() {
+        const response = await instance.delete('/auth/login')
+        return response.data
     }
 }
 
 export const profileAPI = {
-    getProfile(userId) {
-        return instance.get(`/profile/${userId}`)
-            .then(response => response.data)
+    async getProfile(userId) {
+        const response = await instance.get(`/profile/${userId}`)
+        return response.data
     },
-    getStatus(userId) {
-        return instance.get(`/profile/status/${userId}`)
-            .then(response => response.data)
+    async getStatus(userId) {
+        const response = await instance.get(`/profile/status/${userId}`)
+        return response.data
     },
-    updateStatus(status) {
-        return instance.put(`/profile/status`, {status})
-            .then(response => response.data)
+    async updateStatus(status) {
+        const response = await instance.put(`/profile/status`, {status})
+        return response.data
     }
 }
 
 export const followAPI = {
-    follow(userId) {
-        return instance.post(`/follow/${userId}`)
-            .then(response => response.data.resultCode)
+    async follow(userId) {
+        const response = await instance.post(`/follow/${userId}`);
+        return response.data.resultCode;
     },
-    unfollow(userId) {
-        return instance.delete(`/follow/${userId}`)
-            .then(response => response.data.resultCode)
+    async unfollow(userId) {
+        const response = await instance.delete(`/follow/${userId}`);
+        return response.data.resultCode;
     }
 }

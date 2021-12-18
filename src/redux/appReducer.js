@@ -1,6 +1,6 @@
 import {authorize} from "./authReducer";
 
-const INITIALIZED_SUCCESS = 'INITIALIZED_SUCCESS';
+const INITIALIZED_SUCCESS = 'way-of-the-samurai-course/app/INITIALIZED_SUCCESS';
 
 const initialState = {
     initialized: false
@@ -20,11 +20,9 @@ const appReducer = (state = initialState, action) => {
 
 export const initializedSuccess = () => ({type: INITIALIZED_SUCCESS})
 
-export const initializeApp = () => (dispatch) => {
-    dispatch(authorize())
-        .then(() => {
-            dispatch(initializedSuccess())
-        })
+export const initializeApp = () => async (dispatch) => {
+    await dispatch(authorize());
+    dispatch(initializedSuccess())
 }
 
 export default appReducer

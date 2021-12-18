@@ -1,12 +1,13 @@
 import {followAPI, usersAPI} from "../api/api";
+import {updateObjectInArray} from "../utils/objectHelpers";
 
-const FOLLOW = 'FOLLOW';
-const UNFOLLOW = 'UNFOLLOW';
-const SET_USERS = 'SET_USERS';
-const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
-const SET_TOTAL_USERS_COUNT = 'SET_TOTAL_USERS_COUNT';
-const TOGGLE_IS_FETCHING = 'TOGGLE_IS_FETCHING';
-const TOGGLE_IS_FOLLOWING_PROGRESS = 'TOGGLE_IS_FOLLOWING_PROGRESS';
+const FOLLOW = 'way-of-the-samurai-course/users/FOLLOW';
+const UNFOLLOW = 'way-of-the-samurai-course/users/UNFOLLOW';
+const SET_USERS = 'way-of-the-samurai-course/users/SET_USERS';
+const SET_CURRENT_PAGE = 'way-of-the-samurai-course/users/SET_CURRENT_PAGE';
+const SET_TOTAL_USERS_COUNT = 'way-of-the-samurai-course/users/SET_TOTAL_USERS_COUNT';
+const TOGGLE_IS_FETCHING = 'way-of-the-samurai-course/users/TOGGLE_IS_FETCHING';
+const TOGGLE_IS_FOLLOWING_PROGRESS = 'way-of-the-samurai-course/users/TOGGLE_IS_FOLLOWING_PROGRESS';
 
 const initialState = {
     users: [],
@@ -22,22 +23,22 @@ const usersReducer = (state = initialState, action) => {
         case FOLLOW:
             return {
                 ...state,
-                users: state.users.map(u => {
-                    if (u.id === action.userId) {
-                        return {...u, followed: true}
-                    }
-                    return u
-                })
+                users: updateObjectInArray(
+                    state.users,
+                    action.userId,
+                    'id',
+                    {followed: true}
+                )
             }
         case UNFOLLOW:
             return {
                 ...state,
-                users: state.users.map(u => {
-                    if (u.id === action.userId) {
-                        return {...u, followed: false}
-                    }
-                    return u
-                })
+                users: updateObjectInArray(
+                    state.users,
+                    action.userId,
+                    'id',
+                    {followed: false}
+                )
             }
         case SET_USERS:
             return {...state, users: action.users}
@@ -71,33 +72,28 @@ export const toggleFollowingProgress = (isFetching, userId) => ({
     userId
 })
 
-export const requestUsers = (page, pageSize) => (dispatch) => {
+export const requestUsers = (page, pageSize) => async (dispatch) => {
     dispatch(toggleIsFetching(true));
     dispatch(setCurrentPage(page))
-    usersAPI.getUsers(page, pageSize)
-        .then(data => {
-            dispatch(toggleIsFetching(false));
-            dispatch(setUsers(data.items))
-            dispatch(setTotalUsersCount(data.totalCount))
-        })
+    const data = await usersAPI.getUsers(page, pageSize)
+    dispatch(toggleIsFetching(false));
+    dispatch(setUsers(data.items))
+    dispatch(setTotalUsersCount(data.totalCount))
 }
-export const follow = (userId) => (dispatch) => {
+
+const followUnfollowFlow = async (dispatch, userId, apiMethod, actionCreator) => {
     dispatch(toggleFollowingProgress(true, userId))
-    followAPI.follow(userId)
-        .then(resultCode => {
-            if (resultCode === 0)
-                dispatch(followSuccess(userId))
-            dispatch(toggleFollowingProgress(false, userId))
-        })
+    const resultCode = await apiMethod(userId)
+    if (resultCode === 0)
+        dispatch(actionCreator(userId))
+    dispatch(toggleFollowingProgress(false, userId))
 }
-export const unfollow = (userId) => (dispatch) => {
-    dispatch(toggleFollowingProgress(true, userId))
-    followAPI.unfollow(userId)
-        .then(resultCode => {
-            if (resultCode === 0)
-                dispatch(unfollowSuccess(userId))
-            dispatch(toggleFollowingProgress(false, userId))
-        })
+
+export const follow = (userId) => async (dispatch) => {
+    await followUnfollowFlow(dispatch, userId, followAPI.follow.bind(followAPI), followSuccess)
+}
+export const unfollow = (userId) => async (dispatch) => {
+    await followUnfollowFlow(dispatch, userId, followAPI.unfollow.bind(followAPI), unfollowSuccess)
 }
 
 export default usersReducer

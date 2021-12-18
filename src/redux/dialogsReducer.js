@@ -1,4 +1,4 @@
-const ADD_MESSAGE = 'ADD-MESSAGE';
+const ADD_MESSAGE = 'way-of-the-samurai-course/dialogs/ADD_MESSAGE';
 
 const initialState = {
     dialogs: [
