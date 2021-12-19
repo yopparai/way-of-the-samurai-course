@@ -6,10 +6,11 @@ import UsersContainer from "./components/Users/UsersContainer";
 import ProfileContainer from "./components/Profile/ProfileContainer";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import Login from "./components/Login/Login";
-import {Component} from "react";
-import {connect} from "react-redux";
+import React, {Component} from "react";
+import {connect, Provider} from "react-redux";
 import {initializeApp} from "./redux/appReducer";
 import Preloader from "./components/common/Preloader/Preloader";
+import store from "./redux/reduxStore";
 
 class App extends Component {
     componentDidMount() {
@@ -46,4 +47,9 @@ const mapStateToProps = (state) => ({
     initialized: state.app.initialized
 })
 
-export default connect(mapStateToProps, {initializeApp})(App);
+const AppContainer = connect(mapStateToProps, {initializeApp})(App)
+const MainApp = () => <Provider store={store}>
+    <AppContainer/>
+</Provider>
+
+export default MainApp
