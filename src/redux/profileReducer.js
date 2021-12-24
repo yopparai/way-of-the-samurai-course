@@ -4,6 +4,7 @@ const ADD_POST = 'way-of-the-samurai-course/profile/ADD_POST';
 const DELETE_POST = 'way-of-the-samurai-course/profile/DELETE_POST';
 const SET_USER_PROFILE = 'way-of-the-samurai-course/profile/SET_USER_PROFILE';
 const SET_USER_STATUS = 'way-of-the-samurai-course/profile/SET_USER_STATUS';
+const SAVE_PHOTO_SUCCESS = 'way-of-the-samurai-course/profile/SAVE_PHOTO_SUCCESS';
 
 const initialState = {
     posts: [
@@ -44,6 +45,15 @@ const profileReducer = (state = initialState, action) => {
                 status: action.status
             }
         }
+        case SAVE_PHOTO_SUCCESS: {
+            return {
+                ...state,
+                profile: {
+                    ...state.profile,
+                    photos: action.photos
+                }
+            }
+        }
         default:
             return state
     }
@@ -53,6 +63,7 @@ export const addPost = newPostText => ({type: ADD_POST, newPostText})
 export const deletePost = postId => ({type: DELETE_POST, postId});
 export const setUserProfile = profile => ({type: SET_USER_PROFILE, profile})
 export const setUserStatus = status => ({type: SET_USER_STATUS, status})
+export const savePhotoSuccess = photos => ({type: SAVE_PHOTO_SUCCESS, photos})
 
 export const getProfile = (userId) => async (dispatch) => {
     const data = await profileAPI.getProfile(userId)
@@ -68,6 +79,12 @@ export const updateStatus = (status) => async (dispatch) => {
     const data = await profileAPI.updateStatus(status)
     if (data.resultCode === 0)
         dispatch(setUserStatus(status))
+}
+
+export const savePhoto = (file) => async (dispatch) => {
+    const data = await profileAPI.savePhoto(file)
+    if (data.resultCode === 0)
+        dispatch(savePhotoSuccess(data.data.photos))
 }
 
 export default profileReducer
