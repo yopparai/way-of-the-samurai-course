@@ -20,12 +20,19 @@ export const authAPI = {
         const response = await instance.get('/auth/me')
         return response.data
     },
-    async login(email, password, rememberMe) {
-        const response = await instance.post('/auth/login', {email, password, rememberMe})
+    async login(email, password, rememberMe, captcha) {
+        const response = await instance.post('/auth/login', {email, password, rememberMe, captcha})
         return response.data
     },
     async logout() {
         const response = await instance.delete('/auth/login')
+        return response.data
+    }
+}
+
+export const securityAPI = {
+    async getCaptchaUrl() {
+        const response = await instance.get('/security/get-captcha-url')
         return response.data
     }
 }

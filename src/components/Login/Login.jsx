@@ -6,32 +6,40 @@ import {login} from "../../redux/authReducer";
 import {Redirect} from "react-router-dom";
 import style from '../common/FormsControls/FormsControls.module.css'
 
-const LoginForm = ({handleSubmit, error}) =>
+const LoginForm = ({handleSubmit, error, captchaUrl}) =>
     <form onSubmit={handleSubmit}>
         <div>
             <Field
-                placeholder={'Email'}
-                name={'email'}
+                placeholder='Email'
+                name='email'
                 component={Input}
                 validate={[required]}
             />
         </div>
         <div>
             <Field
-                placeholder={'Password'}
-                name={'password'}
-                type={'password'}
+                placeholder='Password'
+                name='password'
+                type='password'
                 component={Input}
                 validate={[required]}
             />
         </div>
         <div>
             <Field
-                type={'checkbox'}
-                name={'rememberMe'}
+                type='checkbox'
+                name='rememberMe'
                 component={Input}
             /> Remember me
         </div>
+
+        {captchaUrl && <img src={captchaUrl}/>}
+        {captchaUrl && <Field
+            placeholder='Symbols from image'
+            name='captcha'
+            component={Input}
+        />}
+
         {error &&
             <div className={style.formSummaryError}>
                 {error}
@@ -45,7 +53,12 @@ const LoginReduxForm = reduxForm({form: 'login'})(LoginForm)
 
 const Login = (props) => {
     const onSubmit = (formData) => {
-        props.login(formData.email, formData.password, formData.rememberMe)
+        props.login(
+            formData.email,
+            formData.password,
+            formData.rememberMe,
+            formData.captcha
+        )
     }
 
     if (props.isAuth) {
@@ -54,11 +67,12 @@ const Login = (props) => {
 
     return <div>
         <h1>Login</h1>
-        <LoginReduxForm onSubmit={onSubmit}/>
+        <LoginReduxForm onSubmit={onSubmit} captchaUrl={props.captchaUrl}/>
     </div>;
 }
 
 const mapStateToProps = (state) => ({
+    captchaUrl: state.auth.captchaUrl,
     isAuth: state.auth.isAuth
 });
 
