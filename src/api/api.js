@@ -48,6 +48,10 @@ export const profileAPI = {
         formData.append('image', photoFile)
         const response = await instance.put(`/profile/photo`, formData)
         return response.data
+    },
+    async saveProfile(profile) {
+        const response = await instance.put(`/profile`, profile)
+        return response.data
     }
 }
 
