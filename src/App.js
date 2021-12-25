@@ -1,6 +1,6 @@
 import './App.css';
 import Navbar from "./components/Navbar/Navbar";
-import {BrowserRouter, Route} from 'react-router-dom'
+import {BrowserRouter, Redirect, Route, Switch} from 'react-router-dom'
 import UsersContainer from "./components/Users/UsersContainer";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import Login from "./components/Login/Login";
@@ -26,20 +26,24 @@ class App extends Component {
                 <HeaderContainer/>
                 <Navbar/>
                 <div className='app-wrapper-content'>
-                    <Suspense fallback={<Preloader/>}>
+                    <Switch>
                         <Route path='/profile/:userId?'
-                               render={() => <ProfileContainer/>}
+                               render={() => <Suspense fallback={<Preloader/>}><ProfileContainer/></Suspense>}
                         />
                         <Route path='/dialogs'
-                               render={() => <DialogsContainer/>}
+                               render={() => <Suspense fallback={<Preloader/>}><DialogsContainer/></Suspense>}
                         />
-                    </Suspense>
-                    <Route path='/users'
-                           render={() => <UsersContainer/>}
-                    />
-                    <Route path='/login'
-                           render={() => <Login/>}
-                    />
+                        <Route path='/users'
+                               render={() => <UsersContainer/>}
+                        />
+                        <Route path='/login'
+                               render={() => <Login/>}
+                        />
+                        <Route path='*'
+                               render={() => <div>404 NOT FOUND</div>}
+                        />
+                        <Redirect from="/" to="/profile"/>
+                    </Switch>
                 </div>
             </div>
         </BrowserRouter>;
